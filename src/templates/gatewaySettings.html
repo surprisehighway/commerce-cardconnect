@@ -1,0 +1,53 @@
+{% from "_includes/forms" import textField, lightswitchField %}
+
+{{ textField({
+        label: "Merchant ID"|t('commerce'),
+        id: 'merchantId',
+        class: 'ltr',
+        name: 'merchantId',
+        value: gateway.merchantId,
+        errors: gateway.getErrors('merchantId')
+    }) }}
+
+{{ textField({
+        label: "API Host"|t('commerce'),
+        id: 'apiHost',
+        class: 'ltr',
+        name: 'apiHost',
+        value: gateway.apiHost,
+        errors: gateway.getErrors('apiHost')
+    }) }}
+
+{{ textField({
+        label: "API Port"|t('commerce'),
+        id: 'apiPort',
+        class: 'ltr',
+        name: 'apiPort',
+        value: gateway.apiPort,
+        errors: gateway.getErrors('apiPort')
+    }) }}
+
+{{ textField({
+        label: "API Username"|t('commerce'),
+        id: 'apiUsername',
+        class: 'ltr',
+        name: 'apiUsername',
+        value: gateway.apiUsername,
+        errors: gateway.getErrors('apiUsername')
+    }) }}
+
+{{ textField({
+        label: "API Password"|t('commerce'),
+        id: 'apiPassword',
+        class: 'ltr',
+        name: 'apiPassword',
+        value: gateway.apiPassword,
+        errors: gateway.getErrors('apiPassword')
+    }) }}
+
+{{ lightswitchField({
+        label: "Test Mode"|t('commerce'),
+        name: 'testMode',
+        on: gateway.testMode,
+        errors: gateway.getErrors('testMode'),
+    }) }}

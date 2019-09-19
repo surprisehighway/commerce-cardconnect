@@ -1,0 +1,43 @@
+{
+    "name": "jmauzyk/commerce-cardconnect",
+    "description": "CardConnect integration for Craft Commerce 2",
+    "type": "craft-plugin",
+    "version": "1.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+		"commerce",
+        "craftcms",
+        "craft-plugin",
+        "cardconnect",
+		"gateway"
+    ],
+    "support": {
+        "docs": "https://github.com/jmauzyk/commerce-cardconnect/blob/master/README.md",
+        "source": "https://github.com/jmauzyk/commerce-cardconnect",
+        "issues": "https://github.com/jmauzyk/commerce-cardconnect/issues"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "jmauzyk",
+            "homepage": "https://github.com/jmauzyk"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^3.1.0",
+		"craftcms/commerce": "^2.0.0",
+		"craftcms/commerce-omnipay": "^2.0.0",
+		"jmauzyk/omnipay-cardconnect": "^1.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+          "jmauzyk\\commerce\\cardconnect\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "CardConnect for Craft Commerce",
+        "handle": "commerce-cardconnect",
+        "changelogUrl": "https://raw.githubusercontent.com/jmauzyk/commerce-cardconnect/master/CHANGELOG.md"
+    }
+}
