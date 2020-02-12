@@ -39,11 +39,6 @@ class Gateway extends CreditCardGateway
     /**
     * @var string
     */
-    public $apiPort;
-
-    /**
-    * @var string
-    */
     public $apiUsername;
 
     /**
@@ -88,7 +83,6 @@ class Gateway extends CreditCardGateway
 
         $gateway->setMerchantId($this->merchantId);
         $gateway->setApiHost($this->apiHost);
-        $gateway->setApiPort($this->apiPort);
         $gateway->setApiUsername($this->apiUsername);
         $gateway->setApiPassword($this->apiPassword);
         $gateway->setTestMode($this->testMode);

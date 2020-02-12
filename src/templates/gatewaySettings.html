@@ -1,7 +1,7 @@
-{% from "_includes/forms" import textField, lightswitchField %}
+{% from '_includes/forms' import textField, lightswitchField %}
 
 {{ textField({
-        label: "Merchant ID"|t('commerce'),
+        label: 'Merchant ID'|t('commerce'),
         id: 'merchantId',
         class: 'ltr',
         name: 'merchantId',
@@ -10,25 +10,18 @@
     }) }}
 
 {{ textField({
-        label: "API Host"|t('commerce'),
+        label: 'API Host'|t('commerce'),
+        instructions: 'Enter your API host without protocol.',
         id: 'apiHost',
         class: 'ltr',
         name: 'apiHost',
+        placeholder: '<site>.cardconnect.com',
         value: gateway.apiHost,
         errors: gateway.getErrors('apiHost')
     }) }}
 
 {{ textField({
-        label: "API Port"|t('commerce'),
-        id: 'apiPort',
-        class: 'ltr',
-        name: 'apiPort',
-        value: gateway.apiPort,
-        errors: gateway.getErrors('apiPort')
-    }) }}
-
-{{ textField({
-        label: "API Username"|t('commerce'),
+        label: 'API Username'|t('commerce'),
         id: 'apiUsername',
         class: 'ltr',
         name: 'apiUsername',
@@ -37,7 +30,7 @@
     }) }}
 
 {{ textField({
-        label: "API Password"|t('commerce'),
+        label: 'API Password'|t('commerce'),
         id: 'apiPassword',
         class: 'ltr',
         name: 'apiPassword',
@@ -46,7 +39,7 @@
     }) }}
 
 {{ lightswitchField({
-        label: "Test Mode"|t('commerce'),
+        label: 'Test Mode'|t('commerce'),
         name: 'testMode',
         on: gateway.testMode,
         errors: gateway.getErrors('testMode'),
