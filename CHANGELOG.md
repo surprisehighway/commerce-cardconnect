@@ -1,5 +1,8 @@
 # Release Notes for CardConnect for Craft Commerce
 
+## 1.2.0 - 2020-03-12
+* Added composer support for Craft Commerce 3
+
 ## 1.1.0 - 2020-02-12
 * Updated to be compatible with [new API URLs](https://developer.cardconnect.com/changelog/cardpointe-gateway-api#date-updated-9-16-2019)
 
