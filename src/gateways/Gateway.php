@@ -11,6 +11,7 @@
 namespace jmauzyk\commerce\cardconnect\gateways;
 
 use Craft;
+use craft\commerce\models\Transaction;
 use craft\commerce\omnipay\base\CreditCardGateway;
 use craft\web\View;
 
@@ -170,6 +171,17 @@ class Gateway extends CreditCardGateway
         $gateway->setTestMode($this->testMode);
 
         return $gateway;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function createPaymentRequest(Transaction $transaction, $card = null, $itemBag = null): array
+    {
+        $request = parent::createPaymentRequest($transaction, $card, $itemBag);
+        $request['orderId'] = $transaction->orderId;
+
+        return $request;
     }
 
     /**
