@@ -1,5 +1,13 @@
 # Release Notes for CardConnect for Craft Commerce
 
+## 1.3.0 - 2020-08-07
+> {warning} As of this release, payment forms generated using `getPaymentFormHtml()` will use tokenized card numbers by default via CardConnect's [Hosted iFrame Tokenizer](https://developer.cardconnect.com/hosted-iframe-tokenizer). For information on customizing form appearance, custom payment forms, and reverting to clear PANs, see [the documentation](https://github.com/jmauzyk/commerce-cardconnect/blob/master/README.md).
+
+* Updated `getPaymentFormHtml()` method to implement Hosted iFrame Tokenizer
+* Added `jmauzyk\commerce\cardconnect\gateways\Gateway::getTokenizedNumberInput()`
+* Updated Omnipay: CardConnect to 1.2.0
+* _Authorize_ and _Purchase_ requests now correctly send the order id instead of transaction hashes
+
 ## 1.2.0 - 2020-03-12
 * Added composer support for Craft Commerce 3
 
