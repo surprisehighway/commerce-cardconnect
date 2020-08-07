@@ -71,12 +71,64 @@ class Gateway extends CreditCardGateway
     /**
      * @var array
      */
+    private $_cpSrcParams = [
+        'css' =>
+        "body {
+            margin: 0;
+        }
+
+        input {
+            width: 100%;
+            font-family: system-ui, BlinkMacSystemFont, -apple-system, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+                'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            font-size: 14px;
+            line-height: 20px;
+            color: #3f4d5a;
+            min-height: 3px;
+            box-sizing: border-box;
+            -webkit-appearance: none;
+            appearance: none;
+            padding: 6px 9px;
+            border-radius: 3px;
+            border: 1px solid rgba(96, 125, 159, 0.25);
+            background-color: #fbfcfe;
+            box-shadow: inset 0 1px 4px -1px rgba(96, 125, 159, 0.25);
+            background-clip:
+            padding-box;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: rgba(96, 125, 159, 0.8);
+        }
+
+        input::placeholder {
+            color: hsl(211, 13%, 65%);
+            opacity: 1;
+        }
+
+        .error {
+            border: 1px solid #EF4E4E !important;
+        }"
+    ];
+
+    /**
+     * @var array
+     */
     private $_options = [
         'id' => 'tokenFrame',
         'name' => 'tokenFrame',
         'frameborder' => '0',
         'scrolling' => 'no',
         'height' => '22'
+    ];
+
+    /**
+     * @var array
+     */
+    private $_cpOptions = [
+        'class' => 'fullwidth',
+        'height' => '34'
     ];
 
     // Public Methods
@@ -134,8 +186,12 @@ class Gateway extends CreditCardGateway
      */
     public function getTokenizedNumberInput(?array $srcParams = null, array $options = []): string
     {
+        $request = Craft::$app->getRequest();
         if ($srcParams === null) {
             $srcParams = $this->_srcParams;
+            if ($request->isCpRequest) {
+                $srcParams = array_merge($srcParams, $this->_cpSrcParams);
+            }
             $srcParams['tokenizewheninactive'] = Craft::$app->getRequest()->isMobileBrowser(true) ? 'true' : 'false';
         }
 
@@ -148,6 +204,9 @@ class Gateway extends CreditCardGateway
             $iframeSrc .= '?' . http_build_query($srcParams, null, '&', PHP_QUERY_RFC3986);
         }
         $options = array_merge($this->_options, $options);
+        if ($request->isCpRequest) {
+            $options = array_merge($options, $this->_cpOptions);
+        }
         $options['src'] = $iframeSrc;
         $html = Html::tag('iframe', '', $options) . PHP_EOL . Html::hiddenInput('number', null, ['id' => 'number']);
         return $html;
