@@ -238,7 +238,7 @@ class Gateway extends CreditCardGateway
     protected function createPaymentRequest(Transaction $transaction, $card = null, $itemBag = null): array
     {
         $request = parent::createPaymentRequest($transaction, $card, $itemBag);
-        $request['orderId'] = $transaction->orderId;
+        $request['orderId'] = (string)$transaction->orderId;
 
         return $request;
     }
