@@ -1,5 +1,9 @@
 # Release Notes for CardConnect for Craft Commerce
 
+## 1.3.1 - 2020-08-20
+* Updated tokenized number input to make UI in Craft CP
+* Fixed order ID not displaying in CardPointe
+
 ## 1.3.0 - 2020-08-07
 > {warning} As of this release, payment forms generated using `getPaymentFormHtml()` will use tokenized card numbers by default via CardConnect's [Hosted iFrame Tokenizer](https://developer.cardconnect.com/hosted-iframe-tokenizer). For information on customizing form appearance, custom payment forms, and reverting to clear PANs, see [the documentation](https://github.com/jmauzyk/commerce-cardconnect/blob/master/README.md).
 
