@@ -1,5 +1,14 @@
 # Release Notes for CardConnect for Craft Commerce
 
+## 1.4.0 - 2020-10-21
+> {tip} It's now possible to tokenize using the CardSecure API via javascript. Tokenization method is selected in the gateway settings. For information on customizing form appearance and custom payment forms, see [the documentation](https://github.com/jmauzyk/commerce-cardconnect/blob/master/README.md).
+
+* Added support for saving payment sources
+* Added ability to tokenize using CardSecure API via javascript
+* Updated Omnipay: CardConnect to 1.3.0
+* Added `jmauzyk\commerce\cardconnect\gateways\Gateway::getIframeNumberInput()`
+* Deprecated `jmauzyk\commerce\cardconnect\gateways\Gateway::getTokenizedNumberInput()`
+
 ## 1.3.1 - 2020-08-20
 * Updated tokenized number input to make UI in Craft CP
 * Fixed order ID not displaying in CardPointe

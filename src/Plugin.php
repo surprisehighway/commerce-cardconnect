@@ -11,6 +11,7 @@
 namespace jmauzyk\commerce\cardconnect;
 
 use jmauzyk\commerce\cardconnect\gateways\Gateway;
+use jmauzyk\commerce\cardconnect\plugin\Services;
 
 use Craft;
 use craft\events\RegisterComponentTypesEvent;
@@ -42,7 +43,12 @@ class Plugin extends \craft\base\Plugin
     /**
      * @var string
      */
-    public $schemaVersion = '1.1.0';
+    public $schemaVersion = '1.2.0';
+
+    // Traits
+    // =========================================================================
+
+    use Services;
 
     // Public Methods
     // =========================================================================
@@ -54,6 +60,8 @@ class Plugin extends \craft\base\Plugin
     {
         parent::init();
         self::$plugin = $this;
+
+        $this->_setPluginComponents();
 
 		Event::on(
 			Gateways::class,

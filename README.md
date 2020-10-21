@@ -55,8 +55,7 @@ The basic Commerce payment form can be output using the following line of code.
 {{ cart.gateway.getPaymentFormHtml({})|raw }}
 ```
 
-As of v1.3.0, payment forms generated using `getPaymentFormHtml()` will use tokenized card numbers by default via CardConnect's [Hosted iFrame Tokenizer](https://developer.cardconnect.com/hosted-iframe-tokenizer). To revert to using clear text card numbers, add `useTokens: false` to the params array passed to `getPaymentFormHtml()`. However, per CardConnect's documentation it is __strongly recommended__ that you tokenize the clear text card data before passing it into an authorization
-request.
+As of v1.3.0, payment forms generated using `getPaymentFormHtml()` will use tokenized card numbers by default via CardConnect's [Hosted iFrame Tokenizer](https://developer.cardconnect.com/hosted-iframe-tokenizer). To change the tokenization method or revert to using clear text card numbers, select the appropriate _Tokenization_ configuration under the gateway's settings. Per CardConnect's documentation it is __strongly recommended__ that you tokenize the clear text card data before passing it into a request.
 
 ### Custom Payment Form
 
@@ -71,10 +70,49 @@ If additional customization is needed, custom payment forms can be used so long 
 	* Combined `expiry` (MM/YYYY)
 * `cvv`
 
-To use tokenized card numbers with custom payment forms, use the following line of code to output the hosted iframe tokenizer with an accompanying hidden `number` input. Be sure to include your own JS event handler like the _Primary Payment Page Event Listener_ shown in the [Hosted iFrame Tokenizer documentation](https://developer.cardconnect.com/hosted-iframe-tokenizer#implementing-the-hosted-iFrame).
+To use iframe tokenization with custom payment forms, use the following line of code to output the hosted iframe tokenizer with an accompanying hidden `number` input. Be sure to include your own JS event handler like the _Primary Payment Page Event Listener_ shown in the [Hosted iFrame Tokenizer documentation](https://developer.cardconnect.com/hosted-iframe-tokenizer#implementing-the-hosted-iFrame).
 
 ```Twig
-{{ cart.gateway.getTokenizedNumberInput()|raw }}
+{{ cart.gateway.getIframeNumberInput()|raw }}
+```
+
+To use CardSecure API tokenization with custom payment forms, use the code below as a basis. Element `id` and `name` attributes must be as shown in order to work with the tokenizer javascript.
+
+```Twig
+<!-- Card Number -->
+    <input type="tel" id="cc-cardNumber" name="cardNumber" value="">
+    <input type="hidden" id="cc-number" name="number" value="">
+
+
+<!-- Expiry -->
+    <select id="cc-month" name="month">
+        <!-- options... -->
+    </select>
+    <select id="cc-year" name="year">
+        <!-- options... -->
+    </select>
+
+    <!-- OR -->
+
+    <input type="text" id="cc-expiry" name="expiry" value="">
+
+
+<!-- CVV -->
+    <input type="tel" id="cc-cvv" name="cvv" value="">
+
+
+<!-- Tokenizer JS -->
+    {% do view.registerAssetBundle("jmauzyk\\commerce\\cardconnect\\web\\assets\\cardsecurepaymentform\\CardSecurePaymentFormAsset") %}
+    {% js %}initTokenizer('{{ gateway.getApiSubdomain() }}');{% endjs %}
+```
+
+To speed up tokenization performance, it's recommended to use code similar to below to preconnect or dns-prefetch before the tokenization is called.
+
+```Twig
+{% set subdomain = gateway.getApiSubdomain() %}
+{% set apiUrl = 'https://' ~ subdomain ~ '.cardconnect.com' %}
+{% do view.registerLinkTag({rel: 'preconnect', href: apiUrl}) %}
+{% do view.registerLinkTag({rel: 'dns-prefetch', href: apiUrl}) %}
 ```
 
 ### Hosted iFrame Tokenizer Customization
@@ -121,5 +159,5 @@ Below is an example of how you can customize the default payment form and tokeni
 {{ cart.gateway.getPaymentFormHtml({srcParams: srcParams, options: options})|raw }}
 
 {# To output tokenized number input with customization... #}
-{{ gateway.getTokenizedNumberInput(srcParams, options)|raw }}
+{{ gateway.getIframeNumberInput(srcParams, options)|raw }}
 ```

@@ -1,32 +1,37 @@
 {% import "_includes/forms" as forms %}
+{% if tokenization != 'none' %}
+    {% set apiUrl = 'https://' ~ subdomain ~ '.cardconnect.com' %}
+    {% do view.registerLinkTag({rel: 'preconnect', href: apiUrl}) %}
+    {% do view.registerLinkTag({rel: 'dns-prefetch', href: apiUrl}) %}
+{% endif %}
 
 <fieldset class="card-holder">
     <legend>{{ 'Card Holder'|t('commerce') }}</legend>
 
-    <div class="grid" data-cols="2">
+    <div{% if cp %} class="grid" data-cols="2"{% endif %}>
 
         <!-- Card Holder Name -->
-        <div class="item" data-colspan="1">
+        <div{% if cp %} class="item" data-colspan="1"{% endif %}>
             {{ forms.text({
+                class: 'card-holder-first-name'~(paymentForm.getErrors('firstName') ? ' error'),
+                id: 'cc-firstName',
                 name: 'firstName',
                 maxlength: 70,
                 placeholder: "First Name"|t('commerce'),
                 autocomplete: false,
-                class: 'card-holder-first-name'~(paymentForm.getErrors('firstName') ? ' error'),
-                value: paymentForm.firstName,
-                required: true,
+                value: paymentForm.firstName
             }) }}
         </div>
 
-        <div class="item" data-colspan="1">
+        <div{% if cp %} class="item" data-colspan="1"{% endif %}>
             {{ forms.text({
+                class: 'card-holder-last-name'~(paymentForm.getErrors('lastName') ? ' error'),
+                id: 'cc-firstName',
                 name: 'lastName',
                 maxlength: 70,
                 placeholder: "Last Name"|t('commerce'),
                 autocomplete: false,
-                class: 'card-holder-last-name'~(paymentForm.getErrors('lastName') ? ' error'),
-                value: paymentForm.lastName,
-                required: true,
+                value: paymentForm.lastName
             }) }}
         </div>
     </div>
@@ -44,33 +49,75 @@
     <legend>{{ 'Card'|t('commerce') }}</legend>
 
     <div>
-        <div{% if craft.app.request.isCpRequest %} style="line-height: 0;"{% endif %}>
-            {% set srcParams = srcParams is defined ? srcParams : null %}
-            {% set options = options is defined ? options : [] %}
-            {{ gateway.getTokenizedNumberInput(srcParams, options)|raw }}
-        </div>
+        {% switch tokenization %}
+            {% case 'iframe' %}
+            <div{% if cp %} style="line-height: 0;"{% endif %}>
+                {{ tokenizedNumberInput|raw }}
+            </div>
 
+            {% case 'cardsecure' %}
+            <div>
+                {{ forms.text({
+                    class: 'card-number'~(paymentForm.getErrors('number') ? ' error'),
+                    type: 'tel',
+                    id: 'cc-cardNumber',
+                    name: '',
+                    maxlength: 23,
+                    placeholder: "Card Number"|t('commerce'),
+                    autocomplete: false
+                }) }}
+                {{ forms.hidden({
+                    id: 'cc-number',
+                    name: 'number'
+                }) }}
+            </div>
+
+            {% case 'none' %}
+            <div>
+                {{ forms.text({
+                    class: 'card-number'~(paymentForm.getErrors('number') ? ' error'),
+                    type: 'tel',
+                    id: 'cc-number',
+                    name: 'number',
+                    maxlength: 19,
+                    placeholder: "Card Number"|t('commerce'),
+                    autocomplete: false,
+                    value: paymentForm.number
+                }) }}
+            </div>
+
+            {% default %}
+            <div{% if cp %} style="line-height: 0;"{% endif %}>
+                {{ tokenizedNumberInput|raw }}
+            </div>
+        {% endswitch %}
         <div>
             {{ forms.text({
                 class: 'card-expiry'~(paymentForm.getErrors('month') or paymentForm.getErrors('year') ? ' error'),
                 type: 'text',
+                id: 'cc-expiry',
                 name: 'expiry',
-                placeholder: "MM"|t('commerce')~' / '~"YYYY"|t('commerce'),
+                maxlength: 7,
+                placeholder: "MM"|t('commerce')~'/'~"YYYY"|t('commerce'),
+                autocomplete: false,
                 value: paymentForm.expiry
             }) }}
 
             {{ forms.text({
-                type: 'tel',
-                name: 'cvv',
-                placeholder: "CVV"|t('commerce'),
                 class: 'card-cvc'~(paymentForm.getErrors('cvv') ? ' error'),
+                type: 'tel',
+                id: 'cc-cvv',
+                name: 'cvv',
+                maxlength: 3,
+                placeholder: "CVV"|t('commerce'),
+                autocomplete: false,
                 value: paymentForm.cvv
             }) }}
         </div>
     </div>
 
     {% set errors = [] %}
-    {% for attributeKey in ['number', 'month', 'year', 'cvv'] %}
+    {% for attributeKey in ['number', 'expiry', 'month', 'year', 'cvv'] %}
         {% set errors = errors|merge(paymentForm.getErrors(attributeKey)) %}
     {% endfor %}
 
@@ -79,13 +126,17 @@
 </fieldset>
 
 {% js %}
-    {% if jsHandler is defined %}
-        {{ jsHandler|raw }}
-    {% else %}
-        window.addEventListener('message', function(event) {
-            var response = JSON.parse(event.data);
-            var number = document.getElementById('number');
-            number.value = response.message;
-        }, false);
+    {% if tokenization == 'iframe' %}
+        {% if jsHandler is defined %}
+            {{ jsHandler|raw }}
+        {% else %}
+            window.addEventListener('message', function(event) {
+                var response = JSON.parse(event.data);
+                var number = document.getElementById('cc-number');
+                number.value = response.message;
+            }, false);
+        {% endif %}
+    {% elseif tokenization == 'cardsecure' %}
+        initTokenizer('{{ subdomain }}');
     {% endif %}
 {% endjs %}

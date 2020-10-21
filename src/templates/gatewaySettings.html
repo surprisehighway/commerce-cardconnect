@@ -1,4 +1,4 @@
-{% from '_includes/forms' import textField, lightswitchField %}
+{% from '_includes/forms' import textField, selectField, lightswitchField %}
 
 {{ textField({
         label: 'Merchant ID'|t('commerce'),
@@ -36,6 +36,27 @@
         name: 'apiPassword',
         value: gateway.apiPassword,
         errors: gateway.getErrors('apiPassword')
+    }) }}
+
+{{ selectField({
+        label: 'Tokenization'|t('commerce'),
+        instructions: "Sets how primary account numbers (PANs) are sent to the gateway. *Hosted iframe* embeds CardConnect's [Hosted iFrame Tokenizer](https://developer.cardconnect.com/hosted-iframe-tokenizer) to tokenize PANs before sending. *CardSecure API* uses javascript to encrypt and tokenize PANs before sending. *None* will send clear, non-tokenized PANs in the payment requests. **NOTE:** Unless you are PCI Level 1 or 2 compliant, it is **strongly recommended** that you tokenize clear PANs before sending in requests. For more details on using the tokenization options, see [the documentation](https://github.com/jmauzyk/commerce-cardconnect).",
+        name: 'tokenization',
+        options: {
+                'iframe': 'Hosted iframe',
+                'cardsecure': 'CardSecure API',
+                'none': 'None'
+            },
+        value: gateway.tokenization,
+        errors: gateway.getErrors('tokenization')
+    }) }}
+
+{{ lightswitchField({
+        label: 'Validate Before Save'|t('commerce'),
+        instructions: 'When enabled the gateway will run a $0 authorization before saving payment sources to validate the card.',
+        name: 'validateBeforeSave',
+        on: gateway.validateBeforeSave,
+        errors: gateway.getErrors('validateBeforeSave'),
     }) }}
 
 {{ lightswitchField({

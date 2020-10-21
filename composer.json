@@ -1,8 +1,8 @@
 {
     "name": "jmauzyk/commerce-cardconnect",
-    "description": "CardConnect integration for Craft Commerce 2",
+    "description": "CardConnect integration for Craft Commerce",
     "type": "craft-plugin",
-    "version": "1.3.1",
+    "version": "1.4.0",
     "keywords": [
         "craft",
         "cms",
@@ -28,7 +28,7 @@
         "craftcms/cms": "^3.1",
 		"craftcms/commerce": "^2.0|^3.0",
 		"craftcms/commerce-omnipay": "^2.0",
-		"jmauzyk/omnipay-cardconnect": "^1.2"
+		"jmauzyk/omnipay-cardconnect": "^1.3"
     },
     "autoload": {
         "psr-4": {
