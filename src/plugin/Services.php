@@ -10,6 +10,7 @@
 
 namespace jmauzyk\commerce\cardconnect\plugin;
 
+use jmauzyk\commerce\cardconnect\services\AssetBundles;
 use jmauzyk\commerce\cardconnect\services\Profiles;
 
 /**
@@ -26,13 +27,23 @@ trait Services
     // =========================================================================
 
     /**
-     * Returns the customers service
+     * Returns the profiles service
      *
-     * @return Profiles The customers service
+     * @return Profiles The profiles service
      */
     public function getProfiles(): Profiles
     {
         return $this->get('profiles');
+    }
+
+    /**
+     * Returns the asset bundles service
+     *
+     * @return AssetBundles The asset bundles service
+     */
+    public function getAssetBundles(): AssetBundles
+    {
+        return $this->get('assetBundles');
     }
 
     // Private Methods
@@ -44,6 +55,7 @@ trait Services
     private function _setPluginComponents()
     {
         $this->setComponents([
+            'assetBundles' => AssetBundles::class,
             'profiles' => Profiles::class
         ]);
     }
