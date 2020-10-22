@@ -1,5 +1,16 @@
 # Release Notes for CardConnect for Craft Commerce
 
+## 1.4.1 - 2020-10-22
+### Added
+* Added `jmauzyk\commerce\cardconnect\variables\Variable`
+* Added `jmauzyk\commerce\cardconnect\services\AssetBundle`
+
+### Changed
+* Changed asset bundle source paths to be consistent with published url getter
+
+### Fixed
+* Fixed payment form duplicate input ID
+
 ## 1.4.0 - 2020-10-21
 > {tip} It's now possible to tokenize using the CardSecure API via javascript. Tokenization method is selected in the gateway settings. For information on customizing form appearance and custom payment forms, see [the documentation](https://github.com/jmauzyk/commerce-cardconnect/blob/master/README.md).
 
