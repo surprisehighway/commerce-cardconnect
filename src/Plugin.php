@@ -12,10 +12,12 @@ namespace jmauzyk\commerce\cardconnect;
 
 use jmauzyk\commerce\cardconnect\gateways\Gateway;
 use jmauzyk\commerce\cardconnect\plugin\Services;
+use jmauzyk\commerce\cardconnect\variables\Variable;
 
 use Craft;
 use craft\events\RegisterComponentTypesEvent;
 use craft\commerce\services\Gateways;
+use craft\web\twig\variables\CraftVariable;
 
 use yii\base\Event;
 
@@ -70,5 +72,14 @@ class Plugin extends \craft\base\Plugin
 				$event->types[] = Gateway::class;
 			}
 		);
+
+        Event::on(
+            CraftVariable::class,
+            CraftVariable::EVENT_INIT,
+            function (Event $event) {
+                $variable = $event->sender;
+                $variable->set('commerceCardconnect', Variable::class);
+            }
+        );
     }
 }
