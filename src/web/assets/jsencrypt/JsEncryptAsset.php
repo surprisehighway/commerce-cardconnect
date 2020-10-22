@@ -27,7 +27,7 @@ class JsEncryptAsset extends AssetBundle
      */
     public function init()
     {
-        $this->sourcePath = '@root/vendor/jmauzyk/commerce-cardconnect/lib/jsencrypt';
+        $this->sourcePath = '@jmauzyk/commerce/cardconnect/../lib/jsencrypt';
 
         $this->depends = [];
 

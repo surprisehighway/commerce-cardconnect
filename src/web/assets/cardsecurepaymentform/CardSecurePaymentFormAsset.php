@@ -29,10 +29,10 @@ class CardSecurePaymentFormAsset extends AssetBundle
      */
     public function init()
     {
-        $this->sourcePath = __DIR__;
+        $this->sourcePath = __DIR__ . '/js';
 
         $this->js = [
-            'js/paymentForm.min.js',
+            'paymentForm.min.js',
         ];
 
         $this->depends = [
