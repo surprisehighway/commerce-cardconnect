@@ -1,5 +1,9 @@
 # Release Notes for CardConnect for Craft Commerce
 
+## 1.4.2 - 2020-10-30
+### Fixed
+* Fixed a bug where successful zero-dollar card validations would return as failed
+
 ## 1.4.1 - 2020-10-22
 ### Added
 * Added `jmauzyk\commerce\cardconnect\variables\Variable`
