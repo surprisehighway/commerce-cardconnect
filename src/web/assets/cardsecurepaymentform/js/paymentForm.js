@@ -62,18 +62,8 @@ function initTokenizer(subdomain) {
             var chr = String.fromCharCode(code);
 
             // Update CVV pattern if Amex
-            var amex = /^\D*3[47]/.test(this.value);
-            if (amex) {
-                if (cvv.pattern !== amexCvvPattern) {
-                    cvv.setAttribute('pattern', amexCvvPattern);
-                    cvv.setAttribute('maxlength', 4);
-                }
-            } else {
-                if (cvv.pattern !== cvvPattern) {
-                    cvv.setAttribute('pattern', cvvPattern);
-                    cvv.setAttribute('maxlength', 3);
-                }
-            }
+            var isAmex = /^\D*3[47]/.test(this.value);
+            amexCvv(isAmex);
 
             // if the character is non-digit
             // OR
@@ -81,7 +71,7 @@ function initTokenizer(subdomain) {
             // -> return false (the character is not inserted)
             if (/\D/.test(chr) || (
                 this.selectionStart === this.selectionEnd &&
-                this.value.replace(/\D/g, '').length >= (amex ? 15 : 16) // 15 digits if Amex
+                this.value.replace(/\D/g, '').length >= (isAmex ? 15 : 16) // 15 digits if Amex
             )) {
                 return false;
             }
@@ -141,6 +131,10 @@ function initTokenizer(subdomain) {
     });
 
     cardNumber.addEventListener('focusout', function(e) {
+        // Update CVV pattern if Amex
+        var isAmex = /^\D*3[47]/.test(this.value);
+        amexCvv(isAmex);
+
         if (e instanceof KeyboardEvent) {
             clearTimeout(timeout); // Prevent any lingering timeouts from firing after focusout
             if (readyTokenize()) {
@@ -380,6 +374,20 @@ function initTokenizer(subdomain) {
 
         if (chr !== false) {
             cardNumber.setSelectionRange(pos, pos);
+        }
+    }
+
+    function amexCvv(isAmex) {
+        if (isAmex) {
+            if (cvv.pattern !== amexCvvPattern) {
+                cvv.setAttribute('pattern', amexCvvPattern);
+                cvv.setAttribute('maxlength', 4);
+            }
+        } else {
+            if (cvv.pattern !== cvvPattern) {
+                cvv.setAttribute('pattern', cvvPattern);
+                cvv.setAttribute('maxlength', 3);
+            }
         }
     }
 }
