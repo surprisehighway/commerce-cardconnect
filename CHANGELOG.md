@@ -1,5 +1,9 @@
 # Release Notes for CardConnect for Craft Commerce
 
+## 1.4.4 - 2020-12-17
+### Fixed
+* Fixed bug where expiry pattern wouldn't validate correctly in certain instances
+
 ## 1.4.3 - 2020-12-01
 ### Fixed
 * Fixed a bug where pasted card numbers might not update CVV validation
