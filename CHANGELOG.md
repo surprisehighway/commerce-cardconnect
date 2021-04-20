@@ -1,5 +1,18 @@
 # Release Notes for CardConnect for Craft Commerce
 
+## 1.5.0 - 2021-04-20
+### Added
+* Added `UserFieldsEvent` for sending custom data with authorizations ([documentation](https://github.com/jmauzyk/commerce-cardconnect#custom-user-fields))
+
+### Changed
+* The plugin now supports Commerce Omnipay 3.0
+* The plugin now requires Omnipay: CardConnect 1.4.0
+
+### Fixed
+* Fixed a bug where purchase transactions failed to validate correctly
+* Fixed a bug where requests failed to send cardholder name if different from billing address
+* Fixed a bug where requests using payment sources failed to populate cardholder name
+
 ## 1.4.4 - 2020-12-17
 ### Fixed
 * Fixed bug where expiry pattern wouldn't validate correctly in certain instances

@@ -161,3 +161,26 @@ Below is an example of how you can customize the default payment form and tokeni
 {# To output tokenized number input with customization... #}
 {{ gateway.getIframeNumberInput(srcParams, options)|raw }}
 ```
+
+## Custom User Fields
+
+The CardPointe Gateway API supports custom [user fields](https://developer.cardpointe.com/cardconnect-api#additional-optional-fields) in authorization requests that can be recalled later. These custom values can be populated using the `UserFieldsEvent`:
+
+```php
+use jmauzyk\commerce\cardconnect\events\UserFieldsEvent;
+use jmauzyk\commerce\cardconnect\gateways\Gateway;
+use yii\base\Event;
+
+Event::on(
+    Gateway::class,
+    Gateway::USER_FIELDS_EVENT,
+    function (UserFieldsEvent $e) {
+        $order = $e->order;
+
+        $e->userFields = [
+            'note' => $order->note ?? '',
+            // ...
+        ];
+    }
+);
+```
