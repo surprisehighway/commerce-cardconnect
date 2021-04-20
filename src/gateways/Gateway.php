@@ -12,12 +12,14 @@ namespace jmauzyk\commerce\cardconnect\gateways;
 
 use jmauzyk\commerce\cardconnect\errors\ProfileException;
 use jmauzyk\commerce\cardconnect\errors\PaymentSourceException;
+use jmauzyk\commerce\cardconnect\events\UserFieldsEvent;
 use jmauzyk\commerce\cardconnect\models\CreditCardPaymentForm;
 use jmauzyk\commerce\cardconnect\models\Profile;
 use jmauzyk\commerce\cardconnect\Plugin;
 use jmauzyk\commerce\cardconnect\web\assets\cardsecurepaymentform\CardSecurePaymentFormAsset;
 
 use Craft;
+use craft\commerce\elements\Order;
 use craft\commerce\errors\PaymentException;
 use craft\commerce\models\Address;
 use craft\commerce\models\payments\BasePaymentForm;
@@ -31,8 +33,10 @@ use craft\web\View;
 
 use Omnipay\Cardconnect\Gateway as OmnipayGateway;
 use Omnipay\Common\AbstractGateway;
+use Omnipay\Common\CreditCard;
 use Omnipay\Common\Message\ResponseInterface;
 
+use yii\base\Event;
 use yii\base\NotSupportedException;
 use yii\helpers\Html;
 
@@ -46,6 +50,8 @@ use yii\helpers\Html;
  */
 class Gateway extends CreditCardGateway
 {
+    const USER_FIELDS_EVENT = 'userFieldsEvent';
+
     // Public Properties
     // =========================================================================
 
@@ -194,6 +200,13 @@ class Gateway extends CreditCardGateway
     {
         if ($paymentForm && (!isset($request['profile']) || !$request['profile'])) {
             $request['profile'] = $paymentForm->profile;
+        }
+
+        $userFieldsEvent = new UserFieldsEvent(['order' => $request['order']]);
+        Event::trigger(static::class, self::USER_FIELDS_EVENT, $userFieldsEvent);
+
+        if ($userFields = $userFieldsEvent->userFields) {
+            $request['userfields'] = $userFields;
         }
     }
 
@@ -372,6 +385,7 @@ class Gateway extends CreditCardGateway
                 ];
 
                 $authRequest = $this->gateway()->authorize($authParams);
+
                 $authResponse = $this->sendRequest($authRequest);
 
                 if (!$authResponse->isSuccessful()) {
@@ -470,6 +484,80 @@ class Gateway extends CreditCardGateway
         }
 
         return true;
+    }
+
+    /**
+     * Create a card object using the payment form and the optional order
+     *
+     * @param BasePaymentForm $paymentForm
+     * @param Order           $order
+     *
+     * @return CreditCard
+     */
+    public function createCard(BasePaymentForm $paymentForm, Order $order = null): CreditCard {
+
+        $card = new CreditCard;
+
+        if ($paymentForm instanceof CreditCardPaymentForm) {
+            $this->populateCard($card, $paymentForm);
+        }
+
+        if ($order) {
+            if ($billingAddress = $order->getBillingAddress()) {
+                if (empty($card->getBillingFirstName())) {
+                    $card->setBillingFirstName($billingAddress->firstName);
+                }
+                if (empty($card->getBillingLastName())) {
+                    $card->setBillingLastName($billingAddress->lastName);
+                }
+                $card->setBillingAddress1($billingAddress->address1);
+                $card->setBillingAddress2($billingAddress->address2);
+                $card->setBillingCity($billingAddress->city);
+                $card->setBillingPostcode($billingAddress->zipCode);
+                if ($billingAddress->getCountry()) {
+                    $card->setBillingCountry($billingAddress->getCountry()->iso);
+                }
+                if ($billingAddress->getState()) {
+                    $state = $billingAddress->getState()->abbreviation ?: $billingAddress->getState()->name;
+                    $card->setBillingState($state);
+                }
+                $card->setBillingPhone($billingAddress->phone);
+                $card->setBillingCompany($billingAddress->businessName);
+                $card->setCompany($billingAddress->businessName);
+            }
+
+            if ($shippingAddress = $order->getShippingAddress()) {
+                $card->setShippingFirstName($shippingAddress->firstName);
+                $card->setShippingLastName($shippingAddress->lastName);
+                $card->setShippingAddress1($shippingAddress->address1);
+                $card->setShippingAddress2($shippingAddress->address2);
+                $card->setShippingCity($shippingAddress->city);
+                $card->setShippingPostcode($shippingAddress->zipCode);
+
+                if ($shippingAddress->getCountry()) {
+                    $card->setShippingCountry($shippingAddress->getCountry()->iso);
+                }
+
+                if ($shippingAddress->getState()) {
+                    $state = $shippingAddress->getState()->abbreviation ?: $shippingAddress->getState()->name;
+                    $card->setShippingState($state);
+                }
+
+                $card->setShippingPhone($shippingAddress->phone);
+                $card->setShippingCompany($shippingAddress->businessName);
+            }
+
+            $card->setEmail($order->getEmail());
+        }
+
+        return $card;
+    }
+
+    // TODO: docblock
+    public function inquire(string $reference): array
+    {
+        $inquireRequest = $this->gateway()->inquire(['transactionReference' => $reference]);
+        return $this->sendRequest($inquireRequest)->getData();
     }
 
     // Protected Methods
