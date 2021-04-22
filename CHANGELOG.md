@@ -1,5 +1,10 @@
 # Release Notes for CardConnect for Craft Commerce
 
+## 1.5.1 - 2021-04-22
+### Fixed
+* Fixed bug preventing saved payment sources from populating payments
+* Fixed bug preventing saving of payment sources
+
 ## 1.5.0 - 2021-04-20
 ### Added
 * Added `UserFieldsEvent` for sending custom data with authorizations ([documentation](https://github.com/jmauzyk/commerce-cardconnect#custom-user-fields))
