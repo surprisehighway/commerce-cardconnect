@@ -33,7 +33,7 @@ class CreditCardPaymentForm extends BaseCreditCardPaymentForm
      */
     public function populateFromPaymentSource(PaymentSource $paymentSource)
     {
-        $response = json_encode($paymentSource->response);
+        $response = json_decode($paymentSource->response);
         $name = explode(' ', $response->name, 2);
         $this->profile = $paymentSource->token;
         $this->firstName = $name[0];
