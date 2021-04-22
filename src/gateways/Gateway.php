@@ -202,12 +202,16 @@ class Gateway extends CreditCardGateway
             $request['profile'] = $paymentForm->profile;
         }
 
-        $userFieldsEvent = new UserFieldsEvent(['order' => $request['order']]);
-        Event::trigger(static::class, self::USER_FIELDS_EVENT, $userFieldsEvent);
+        if (isset($request['order'])) {
+            $userFieldsEvent = new UserFieldsEvent(['order' => $request['order']]);
+            Event::trigger(static::class, self::USER_FIELDS_EVENT, $userFieldsEvent);
 
-        if ($userFields = $userFieldsEvent->userFields) {
-            $request['userfields'] = $userFields;
+            if ($userFields = $userFieldsEvent->userFields) {
+                $request['userfields'] = $userFields;
+            }
         }
+
+
     }
 
     /**
