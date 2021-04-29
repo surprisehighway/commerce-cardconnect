@@ -10,6 +10,8 @@
 
 namespace jmauzyk\commerce\cardconnect\models;
 
+use jmauzyk\commerce\cardconnect\errors\PaymentSourceException;
+
 use craft\commerce\models\PaymentSource;
 use craft\commerce\models\payments\CreditCardPaymentForm as BaseCreditCardPaymentForm;
 
@@ -33,7 +35,7 @@ class CreditCardPaymentForm extends BaseCreditCardPaymentForm
      */
     public function populateFromPaymentSource(PaymentSource $paymentSource)
     {
-        $response = json_decode($paymentSource->response);
+        $response = $this->_getResponseObject($paymentSource->response);
         $name = explode(' ', $response->name, 2);
         $this->profile = $paymentSource->token;
         $this->firstName = $name[0];
@@ -53,5 +55,27 @@ class CreditCardPaymentForm extends BaseCreditCardPaymentForm
         }
 
         return $rules;
+    }
+
+    /**
+     * Converts response to object depending on variable type
+     *
+     * @param mixed $response
+     * @return object
+     * @throws PaymentSourceException
+     */
+    private function _getResponseObject($response): object
+    {
+        $type = gettype($response);
+
+        if ($type === 'string') {
+            return json_decode($response);
+        }
+
+        if ($type === 'array') {
+            return (object)$response;
+        }
+
+        throw new PaymentSourceException('Invalid payment source response.');
     }
 }
