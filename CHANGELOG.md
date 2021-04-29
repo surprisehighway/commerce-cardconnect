@@ -1,5 +1,9 @@
 # Release Notes for CardConnect for Craft Commerce
 
+## 1.5.1.1 - 2021-04-29
+### Fixed
+* Fixed bug preventing saved payment sources from populating payments
+
 ## 1.5.1 - 2021-04-22
 ### Fixed
 * Fixed bug preventing saved payment sources from populating payments
