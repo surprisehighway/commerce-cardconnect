@@ -227,7 +227,7 @@ class Gateway extends CreditCardGateway
     /**
      * @inheritdoc
      */
-    public function getSettingsHtml()
+    public function getSettingsHtml(): ?string
     {
         return Craft::$app->getView()->renderTemplate('commerce-cardconnect/gatewaySettings', ['gateway' => $this]);
     }
@@ -235,7 +235,7 @@ class Gateway extends CreditCardGateway
     /**
      * @inheritdoc
      */
-    public function getPaymentFormHtml(array $params)
+    public function getPaymentFormHtml(array $params): ?string
     {
         $template = 'commerce-cardconnect/paymentForm';
         $request = Craft::$app->getRequest();
@@ -442,7 +442,7 @@ class Gateway extends CreditCardGateway
     /**
      * @inheritdoc
      */
-    public function deletePaymentSource($token): bool
+    public function deletePaymentSource(string $token): bool
     {
         try {
             $tokenFragments = explode('/', $token);

@@ -33,7 +33,7 @@ class CreditCardPaymentForm extends BaseCreditCardPaymentForm
     /**
      * @param PaymentSource $paymentSource
      */
-    public function populateFromPaymentSource(PaymentSource $paymentSource)
+    public function populateFromPaymentSource(PaymentSource $paymentSource): void
     {
         $response = $this->_getResponseObject($paymentSource->response);
         $name = explode(' ', $response->name, 2);
