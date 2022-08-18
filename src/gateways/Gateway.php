@@ -196,7 +196,7 @@ class Gateway extends CreditCardGateway
     /**
      * @inheritdoc
      */
-    public function populateRequest(array &$request, BasePaymentForm $paymentForm = null)
+    public function populateRequest(array &$request, BasePaymentForm $paymentForm = null): void
     {
         if ($paymentForm && (!isset($request['profile']) || !$request['profile'])) {
             $request['profile'] = $paymentForm->profile;
@@ -442,7 +442,7 @@ class Gateway extends CreditCardGateway
     /**
      * @inheritdoc
      */
-    public function deletePaymentSource(string $token): bool
+    public function deletePaymentSource($token): bool
     {
         try {
             $tokenFragments = explode('/', $token);
@@ -570,7 +570,7 @@ class Gateway extends CreditCardGateway
     /**
      * @inheritdoc
      */
-    protected function getGatewayClassName()
+    protected function getGatewayClassName(): ?string
     {
         return '\\'.OmnipayGateway::class;
     }

@@ -25,9 +25,9 @@
         }
     ],
     "require": {
-        "craftcms/cms": "^3.1",
-		"craftcms/commerce": "^2.0|^3.0",
-		"craftcms/commerce-omnipay": "^2.0|^3.0",
+        "craftcms/cms": "^4.0",
+		"craftcms/commerce": "^4.0",
+		"craftcms/commerce-omnipay": "^4.0",
 		"jmauzyk/omnipay-cardconnect": "^1.4.0"
     },
     "autoload": {
