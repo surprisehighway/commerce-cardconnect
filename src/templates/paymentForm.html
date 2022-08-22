@@ -133,7 +133,7 @@
             window.addEventListener('message', function(event) {
                 var response = JSON.parse(event.data);
                 var number = document.getElementById('cc-number');
-                if(number === undefined) {
+                if(!number) {
                     number = document.getElementById('paymentForm-cardconnect-cc-number');
                 }
                 number.value = response.message;
